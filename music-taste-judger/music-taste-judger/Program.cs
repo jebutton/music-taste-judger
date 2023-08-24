@@ -13,6 +13,9 @@ namespace MusicTasteJudger
     /// </remarks>
     class Program
     {
+        /// <summary>
+        /// Main Method When Executed.
+        /// </summary>
         public static void Main()
         {
             WriteLine("Hello Cyberpunk Boy, Girl, or Hacker");
@@ -76,9 +79,24 @@ namespace MusicTasteJudger
     /// </summary>
     public class MusicalArtist
     {
-        private string? artistName;
-        private decimal artistScore;
-        private string? artistReview;
+        private string? _artistName;
+        private decimal _artistScore;
+        private string? _artistReview;
+        public string? ArtistName
+        {
+            get => _artistName; 
+            set => _artistName = value;
+        }
+        public decimal ArtistScore
+        {
+            get => _artistScore; 
+            set => _artistScore = value;
+        }
+        public string? ArtistReview
+        {
+            get => _artistReview;
+            set =>  _artistReview = value;
+        }
         /// <summary>
         /// Constructor with all private fields.
         /// </summary>
@@ -86,9 +104,9 @@ namespace MusicTasteJudger
         /// <param name="score">The Score of the Artist</param>
         /// <param name="review"> The Review of the Artist</param>
         public MusicalArtist(string name, decimal score, string review) { 
-            artistName = name;
-            artistScore = score;
-            artistReview = review;
+            _artistName = name;
+            _artistScore = score;
+            _artistReview = review;
         }
         /// <summary>
         /// Constructor without the review.
@@ -97,8 +115,8 @@ namespace MusicTasteJudger
         /// <param name="score">The Score of the Artist</param>
         public MusicalArtist(string name, decimal score)
         {
-            artistName = name;
-            artistScore = score;
+            _artistName = name;
+            _artistScore = score;
             GenerateReview();
         }
         /// <summary>
@@ -107,7 +125,7 @@ namespace MusicTasteJudger
         /// </summary>
         private void GenerateReview()
         {
-            artistReview = "This will be Expanded Later";
+            _artistReview = "This will be Expanded Later";
         }
         /// <summary>
         /// Returns a well structured review.
@@ -115,8 +133,28 @@ namespace MusicTasteJudger
         /// <returns>A string containing a review.</returns>
         public string GetFullReview()
         {
-            string fullReview = $"The artist {artistName} has an index score of {artistScore} and my opinion of them is: {artistReview}";
+            string fullReview = $"The artist {_artistName} has an index score of {_artistScore} and my opinion of them is: {_artistReview}";
             return fullReview;
+        }
+        /// <summary>
+        /// Just your standard Equals() method.
+        /// </summary>
+        /// <param name="obj">The object you're comparing against.</param>
+        /// <returns>A bool representing whether it is equal or not.</returns>
+        public override bool Equals(object? obj)
+        {
+            return obj is MusicalArtist artist &&
+                   _artistName == artist._artistName &&
+                   _artistScore == artist._artistScore &&
+                   _artistReview == artist._artistReview;
+        }
+        /// <summary>
+        /// Just your standard GetHahsCode() method. 
+        /// </summary>
+        /// <returns>An int representing the hashcode of the object.</returns>
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_artistName, _artistScore, _artistReview);
         }
     }
 }
