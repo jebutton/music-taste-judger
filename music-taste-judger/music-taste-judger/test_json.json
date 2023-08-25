@@ -1,0 +1,12 @@
+[
+  {
+    "artistName": "Test Artist 1",
+    "artistScore": 5.0,
+    "artistReview": "This is a Test Review"
+  },
+  {
+    "artistName": "Test Artist 2",
+    "artistScore": 5.1,
+    "artistReview": "This is a 2nd Test Review"
+  }
+]

@@ -1,5 +1,7 @@
 ﻿using System.CodeDom.Compiler;
+using System.Runtime.CompilerServices;
 using static System.Console;
+using Newtonsoft.Json;
 namespace MusicTasteJudger
 {
     /// <summary>
@@ -21,7 +23,10 @@ namespace MusicTasteJudger
             WriteLine("Hello Cyberpunk Boy, Girl, or Hacker");
             bool bandFound = false;
             // Generate the list of artists for Testing.
-            Dictionary<string, MusicalArtist> artists = GenerateArtists();
+            //Dictionary<string, MusicalArtist> artists = GenerateArtists();
+            ArtistDictionary artistDictionary = new();
+            Dictionary<string, MusicalArtist> artists = artistDictionary.Artists;
+
             do
             {
                 Write("Please Enter A Good Synthwave Artist: ");
@@ -72,7 +77,67 @@ namespace MusicTasteJudger
                 WriteLine("There is a duplicate key in your list.");
             }
             return artists;
-        } 
+        }
+        private static Dictionary<string, MusicalArtist> GenerateArtistsFromJSON()
+        {
+            Dictionary<string, MusicalArtist> artists = new();
+           
+            return artists;
+        }
+    }
+    public class ArtistDictionary
+    {
+        private Dictionary<string, MusicalArtist> _artistsDict;
+        private List<MusicalArtist>? _artistList;
+        private readonly string _jsonFilePath;
+        public Dictionary<string, MusicalArtist> Artists
+        {
+            get => _artistsDict;
+            set => _artistsDict = value;
+        }
+        public ArtistDictionary ()
+        {
+            _artistsDict = new();
+            _artistList = new();
+            _jsonFilePath = @"..\..\..\test_json.json";
+            ReadJSONFile();
+            BuildArtistDictionary();
+            
+        }
+        public void ReadJSONFile()
+        {
+            var jsonFileSerializer = new JsonSerializer();
+            using var jsonStreamReader = new StreamReader(_jsonFilePath);
+            using var jsonDataReader = new JsonTextReader(jsonStreamReader);
+            _artistList = jsonFileSerializer.Deserialize<List<MusicalArtist>>(jsonDataReader);
+        }
+        public void BuildArtistDictionary()
+        {
+            if (_artistList != null)
+            {
+                foreach (var artist in _artistList)
+                {
+                    if (artist.ExpectedKey != null)
+                    {
+                        try
+                        {
+                            WriteLine($"Loading Artist: {artist}");
+                            _artistsDict.Add(artist.ExpectedKey, artist);
+                        }
+                        catch (NullReferenceException)
+                        {
+                            WriteLine($"Artist is skipped because artist name is null. \n {artist}");
+                        }
+                    }
+                }
+            }
+            else
+            {
+                WriteLine("Error Loading JSON File into Artists. The data is null.");
+                throw new Exception("Artist List is null");
+            }
+        }
+
     }
     /// <summary>
     /// This is a class to repressent a Musical Artist. It contains some key values about them.
@@ -97,16 +162,19 @@ namespace MusicTasteJudger
             get => _artistReview;
             set =>  _artistReview = value;
         }
+        public string? ExpectedKey;
         /// <summary>
         /// Constructor with all private fields.
         /// </summary>
         /// <param name="name">The Name of the Artist</param>
         /// <param name="score">The Score of the Artist</param>
         /// <param name="review"> The Review of the Artist</param>
-        public MusicalArtist(string name, decimal score, string review) { 
-            _artistName = name;
-            _artistScore = score;
-            _artistReview = review;
+        [JsonConstructor]
+        public MusicalArtist(string artistName, decimal artistScore, string artistReview) { 
+            _artistName = artistName;
+            _artistScore = artistScore;
+            _artistReview = artistReview;
+            GenerateExpectedKey();
         }
         /// <summary>
         /// Constructor without the review.
@@ -118,6 +186,7 @@ namespace MusicTasteJudger
             _artistName = name;
             _artistScore = score;
             GenerateReview();
+            GenerateExpectedKey();
         }
         /// <summary>
         /// For expansion later. This will eventually generate a review
@@ -136,6 +205,17 @@ namespace MusicTasteJudger
             string fullReview = $"The artist {_artistName} has an index score of {_artistScore} and my opinion of them is: {_artistReview}";
             return fullReview;
         }
+        public void GenerateExpectedKey()
+        {
+            if (_artistName != null)
+            {
+                ExpectedKey = _artistName.ToLower();
+            }
+            else
+            {
+                WriteLine("Artist name is null, can't generate key.");
+            }
+        }
         /// <summary>
         /// Just your standard Equals() method.
         /// </summary>
@@ -149,12 +229,21 @@ namespace MusicTasteJudger
                    _artistReview == artist._artistReview;
         }
         /// <summary>
-        /// Just your standard GetHahsCode() method. 
+        /// Just your standard GetHashCode() method. 
         /// </summary>
         /// <returns>An int representing the hashcode of the object.</returns>
         public override int GetHashCode()
         {
             return HashCode.Combine(_artistName, _artistScore, _artistReview);
+        }
+        /// <summary>
+        /// Standard ToString() method.
+        /// </summary>
+        /// <returns>A string representation of a Musical Artist</returns>
+        public override string? ToString()
+        {
+            string stringRepresentation = $"| Type: MusicalArtist | Artist Name: {_artistName} | Artist Score: {_artistScore} | Artist Review: {_artistReview} |";
+            return stringRepresentation;
         }
     }
 }
