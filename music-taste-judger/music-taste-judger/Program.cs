@@ -26,7 +26,6 @@ namespace MusicTasteJudger
             //Dictionary<string, MusicalArtist> artists = GenerateArtists();
             ArtistDictionary artistDictionary = new();
             Dictionary<string, MusicalArtist> artists = artistDictionary.Artists;
-
             do
             {
                 Write("Please Enter A Good Synthwave Artist: ");
@@ -35,56 +34,31 @@ namespace MusicTasteJudger
                 {
                     WriteLine("Response is empty or null");
                 }
+                else if (band == "load_test_data")
+                {
+                    artists = artistDictionary.GenerateTestArtists();
+                }
                 else
                 {
                     try
                     {
                         MusicalArtist searchResult = artists[band.ToLower()];
+ 
                         WriteLine(searchResult.GetFullReview());
                         bandFound = true;
                     }
                     catch (KeyNotFoundException)
                     {
-                        WriteLine("Artist / Band is not found. Try again.");
+                        WriteLine("Artist / Band is not found. Try again or enter load_test_data to load standard sample data");
                     }
                 }
             } while (!bandFound);
             Console.ReadKey();
         }
-        /// <summary>
-        /// This is a temporary method to generate a dictionary of artists. 
-        /// Eventually this will be replaced by pulling the artists from a file.
-        /// </summary>
-        /// <returns>A Dictionary Collection of MusicalArtist objects with a string key representing the band name.</returns>
-        private static Dictionary<string, MusicalArtist> GenerateArtists()
-        {
-            Dictionary<string, MusicalArtist> artists = new ();
-            try
-            {
-                artists.Add("carpenter brut", new MusicalArtist("Carpenter Brut", 9.0m, "Very good, very aggressive and clearly an genre leader."));
-                artists.Add("scandroid", new MusicalArtist("Scandroid", 8.0m, "First two albums are incredible, but I fell off after that"));
-                artists.Add("dance with the dead", new MusicalArtist("Dance With The Dead", 8.0m, "First few albums were great. I Fell off after that."));
-                artists.Add("twrp", new MusicalArtist("TWRP", 9.0m, "Amazing Live, Very Talented Musicians."));
-                artists.Add("magic sword", new MusicalArtist("Magic Sword", 6.0m, "They put on a surprisingly good live show."));
-                artists.Add("michael oakley", new MusicalArtist("Michael Oakley", 7.0m, "Has some really good tracks, Reminds me of George Michael."));
-                artists.Add("lazerhawk", new MusicalArtist("LazerHawk", 4.0m, "Not a big fan of their music."));
-                artists.Add("timecop1983", new MusicalArtist("TimeCop1983", 1.0m, "Never listened to their stuff much."));
-                artists.Add("d.notive", new MusicalArtist("d.notive", 9.0m, "Pretty good, some catchy stuff for an indie synthwave artist. Personable as well."));
-                artists.Add("jamievx", new MusicalArtist("JAMIEvx", 8.0m, "Another good indie synthwave artist I discovered through bandcamp."));
-            }
-            catch (ArgumentException)
-            {
-                WriteLine("There is a duplicate key in your list.");
-            }
-            return artists;
-        }
-        private static Dictionary<string, MusicalArtist> GenerateArtistsFromJSON()
-        {
-            Dictionary<string, MusicalArtist> artists = new();
-           
-            return artists;
-        }
     }
+    /// <summary>
+    /// A class to generate and encapsulate an Diciontary of artists.
+    /// </summary>
     public class ArtistDictionary
     {
         private Dictionary<string, MusicalArtist> _artistsDict;
@@ -95,6 +69,9 @@ namespace MusicTasteJudger
             get => _artistsDict;
             set => _artistsDict = value;
         }
+        /// <summary>
+        /// Default Constructor for the ArtistDictionary class.
+        /// </summary>
         public ArtistDictionary ()
         {
             _artistsDict = new();
@@ -104,6 +81,9 @@ namespace MusicTasteJudger
             BuildArtistDictionary();
             
         }
+        /// <summary>
+        /// This method reads the JSON file.
+        /// </summary>
         public void ReadJSONFile()
         {
             var jsonFileSerializer = new JsonSerializer();
@@ -111,6 +91,10 @@ namespace MusicTasteJudger
             using var jsonDataReader = new JsonTextReader(jsonStreamReader);
             _artistList = jsonFileSerializer.Deserialize<List<MusicalArtist>>(jsonDataReader);
         }
+        /// <summary>
+        /// This method builds the actual dictionary of artists.
+        /// </summary>
+        /// <exception cref="Exception">An exception thrown if an artist or list of artists is null.</exception>
         public void BuildArtistDictionary()
         {
             if (_artistList != null)
@@ -128,6 +112,10 @@ namespace MusicTasteJudger
                         {
                             WriteLine($"Artist is skipped because artist name is null. \n {artist}");
                         }
+                        catch (ArgumentException)
+                        {
+                            WriteLine("There is a duplicate key in your list.");
+                        }
                     }
                 }
             }
@@ -137,7 +125,32 @@ namespace MusicTasteJudger
                 throw new Exception("Artist List is null");
             }
         }
-
+        /// <summary>
+        /// This is a temporary method to generate a dictionary of artists. Useful for testing.
+        /// </summary>
+        /// <returns>A Dictionary Collection of MusicalArtist objects with a string key representing the band name.</returns>
+        public Dictionary<string, MusicalArtist> GenerateTestArtists()
+        {
+            Dictionary<string, MusicalArtist> testArtists = new();
+            try
+            {
+                testArtists.Add("carpenter brut", new MusicalArtist("Carpenter Brut", 9.0m, "Very good, very aggressive and clearly an genre leader."));
+                testArtists.Add("scandroid", new MusicalArtist("Scandroid", 8.0m, "First two albums are incredible, but I fell off after that"));
+                testArtists.Add("dance with the dead", new MusicalArtist("Dance With The Dead", 8.0m, "First few albums were great. I Fell off after that."));
+                testArtists.Add("twrp", new MusicalArtist("TWRP", 9.0m, "Amazing Live, Very Talented Musicians."));
+                testArtists.Add("magic sword", new MusicalArtist("Magic Sword", 6.0m, "They put on a surprisingly good live show."));
+                testArtists.Add("michael oakley", new MusicalArtist("Michael Oakley", 7.0m, "Has some really good tracks, Reminds me of George Michael."));
+                testArtists.Add("lazerhawk", new MusicalArtist("LazerHawk", 4.0m, "Not a big fan of their music."));
+                testArtists.Add("timecop1983", new MusicalArtist("TimeCop1983", 1.0m, "Never listened to their stuff much."));
+                testArtists.Add("d.notive", new MusicalArtist("d.notive", 9.0m, "Pretty good, some catchy stuff for an indie synthwave artist. Personable as well."));
+                testArtists.Add("jamievx", new MusicalArtist("JAMIEvx", 8.0m, "Another good indie synthwave artist I discovered through bandcamp."));
+            }
+            catch (ArgumentException)
+            {
+                WriteLine("There is a duplicate key in your list.");
+            }
+            return testArtists;
+        }
     }
     /// <summary>
     /// This is a class to repressent a Musical Artist. It contains some key values about them.
