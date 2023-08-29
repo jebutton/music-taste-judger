@@ -23,5 +23,4 @@ This tool is designed to judge your choice of Synthwave artist. I may expand it 
 - 0.004.0 added the ability to read from a file of test json by implementing a class to create a Artist Dictionary.
 - 0.004.0 Changed the constructor for the MusicalArtist class to work with Newtonsoft.Json.
 - 0.005.0 Did code cleanup, added comments, moved around some methods.
-- 0.005.0 Added ability to load well formatted sample data on commmand, instead of the (currently) incomplete 
-- JSON data.
+- 0.005.0 Added ability to load well formatted sample data on commmand, instead of the (currently) incomplete JSON data.
