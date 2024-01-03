@@ -1,7 +1,7 @@
 # music-taste-judger
 
 ## Version
-Version 0.004.0
+Version 0.006.0
 ## Description
 This is just a silly project I'm working on as I learn C# for my job, posted publicly with permission of my boss. 
 I wanted to create something that isn't just an isolated language exercise when studying C#, especially since I need to learn unit testing in NUnit.
@@ -24,3 +24,4 @@ This tool is designed to judge your choice of Synthwave artist. I may expand it 
 - 0.004.0 Changed the constructor for the MusicalArtist class to work with Newtonsoft.Json.
 - 0.005.0 Did code cleanup, added comments, moved around some methods.
 - 0.005.0 Added ability to load well formatted sample data on commmand, instead of the (currently) incomplete JSON data.
+- 0.006.0 Split types into their own files, changed constructor for ArtistDictionary type, and created nunit sub project called music-taste-judger-tests.
