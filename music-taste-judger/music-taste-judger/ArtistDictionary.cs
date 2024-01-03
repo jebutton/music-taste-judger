@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 namespace MusicTasteJudger
 {
     /// <summary>
-    /// A class to generate and encapsulate an Diciontary of artists.
+    /// A class to generate and encapsulate an Dictionary of artists.
     /// </summary>
     public class ArtistDictionary
     {
@@ -18,14 +18,14 @@ namespace MusicTasteJudger
         /// <summary>
         /// Default Constructor for the ArtistDictionary class.
         /// </summary>
-        public ArtistDictionary ()
+        public ArtistDictionary (String file_path)
         {
             _artistsDict = new();
             _artistList = new();
-            _jsonFilePath = @"..\..\..\test_json.json";
+            //_jsonFilePath = @"..\..\..\test_json.json";
+            _jsonFilePath = @file_path;
             ReadJSONFile();
             BuildArtistDictionary();
-            
         }
         /// <summary>
         /// This method reads the JSON file.

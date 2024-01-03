@@ -23,7 +23,7 @@ namespace MusicTasteJudger
             bool bandFound = false;
             // Generate the list of artists for Testing.
             //Dictionary<string, MusicalArtist> artists = GenerateArtists();
-            ArtistDictionary artistDictionary = new();
+            ArtistDictionary artistDictionary = new(@"..\..\..\test_json.json");
             Dictionary<string, MusicalArtist> artists = artistDictionary.Artists;
             do
             {
